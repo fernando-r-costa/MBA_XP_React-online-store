@@ -2,6 +2,7 @@
 import useSWR from "swr";
 import axios from "axios";
 import styled from "styled-components";
+import Link from "next/link";
 
 const StyleProductList = styled.ul`
   display: flex;
@@ -25,7 +26,7 @@ const StyleProductCard = styled.li`
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
-export const Products = () => {
+const Products = () => {
   const { data, error, isLoading } = useSWR(
     "https://fakestoreapi.com/products?limit=10",
     fetcher
@@ -43,11 +44,15 @@ export const Products = () => {
     <div>
       <StyleProductList>
         {data.map((product: any) => (
-            <StyleProductCard key={product.id}>
+          <StyleProductCard key={product.id}>
+            <Link href={`${product.id}`}>
               <h2>{product.title}</h2>
-            </StyleProductCard>
+            </Link>
+          </StyleProductCard>
         ))}
       </StyleProductList>
     </div>
   );
 };
+
+export default Products;
