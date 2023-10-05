@@ -1,22 +1,14 @@
 "use client";
-import axios from "axios";
-import useSWR from "swr";
 
-export default function Product({ params }: { params: { product: number } }) {
-  const { data, error, isLoading } = useSWR(
-    `https://fakestoreapi.com/products/${params.product}`,
-    (url: string) => axios.get(url).then((res) => res.data)
-    );
-  
-    
+const getProduct = async (id: any) => {
+  let res = await fetch(`https://fakestoreapi.com/products/${id}`, {
+    next: { revalidate: 10000 },
+  });
+  return res.json();
+};
 
-  if (error) {
-    return <div>Um erro foi encontrado</div>;
-  }
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-  return <div>
-  </div>;
+export default async function Page({ params }: { params: { product: string } }) {
+  const product = await getProduct(params.product)
+  console.log("🚀 ~ file: page.tsx:12 ~ Page ~ product:", product)
+  return <div>My Post: {params.product}</div>
 }
